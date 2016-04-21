@@ -164,6 +164,10 @@ class Subprocess:
             event = event_class(self, old_state, expected)
             events.notify(event)
 
+        if new_state == ProcessStates.RUNNING:
+            if self.warmup > 0:
+              time.sleep(self.warmup)
+
         if new_state == ProcessStates.BACKOFF:
             now = time.time()
             self.backoff = self.backoff + 1
