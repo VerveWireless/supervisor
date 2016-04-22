@@ -155,6 +155,7 @@ class Subprocess:
 
     def change_state(self, new_state, expected=True):
         old_state = self.state
+	now = time.time()
         if new_state is old_state:
             # exists for unit tests
             return False
@@ -206,7 +207,7 @@ class Subprocess:
         self.laststart = time.time()
 
         self._assertInState(ProcessStates.EXITED, ProcessStates.FATAL,
-                            ProcessStates.BACKOFF, ProcessStates.STOPPED)
+                            ProcessStates.BACKOFF, ProcessStates.STOPPED,ProcessStates.WARMUP)
 
         self.change_state(ProcessStates.STARTING)
 
