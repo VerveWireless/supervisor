@@ -164,9 +164,8 @@ class Subprocess:
             event = event_class(self, old_state, expected)
             events.notify(event)
 
-        if new_state == ProcessStates.RUNNING:
-            if self.warmup > 0:
-              time.sleep(self.warmup)
+        if new_state == ProcessStates.WARMUP:
+          self.warmup = now + self.config.warmup
 
         if new_state == ProcessStates.BACKOFF:
             now = time.time()
@@ -601,7 +600,16 @@ class Subprocess:
             elif state == ProcessStates.STOPPED and not self.laststart:
                 if self.config.autostart:
                     # STOPPED -> STARTING
-                    self.spawn()
+                    # dont spawn yet if we have not yet reached the warmup period.
+                    if self.config.warmup > 0:
+                      self.change_state(ProcessStates.WARMUP)
+                    else:
+                      self.spawn()
+
+            elif state == ProcessStates.WARMUP:
+              if now > self.warmup:
+                self.spawn()
+
             elif state == ProcessStates.BACKOFF:
                 if self.backoff <= self.config.startretries:
                     if now > self.delay:

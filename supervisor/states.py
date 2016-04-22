@@ -3,6 +3,7 @@
 
 class ProcessStates:
     STOPPED = 0
+    WARMUP  = 5
     STARTING = 10
     RUNNING = 20
     BACKOFF = 30
