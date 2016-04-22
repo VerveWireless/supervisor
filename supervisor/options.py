@@ -966,7 +966,8 @@ class ServerOptions(Options):
                 exitcodes=exitcodes,
                 redirect_stderr=redirect_stderr,
                 environment=environment,
-                serverurl=serverurl)
+                serverurl=serverurl,
+                warmup=warmup)
 
             programs.append(pconfig)
 
